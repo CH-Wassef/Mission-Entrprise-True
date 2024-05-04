@@ -5,9 +5,11 @@ import com.example.missionentreprisetrue.Entities.Publication;
 import com.example.missionentreprisetrue.Repositories.PublicationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("Publication")
@@ -29,19 +31,24 @@ public class PublicationController {
 
     @PostMapping("/")
     public Publication createPublication(@RequestBody Publication publication) {
+
         return publicationRepository.save(publication);
     }
 
     @PutMapping("/{id}")
     public Publication updatePublication(@PathVariable Long id, @RequestBody Publication newPublication) {
-        return publicationRepository.findById(id)
-                .map(publication -> {
-                    publication.setTitre(newPublication.getTitre());
-                    publication.setContenu(newPublication.getContenu());
-                    publication.setDateCreation(newPublication.getDateCreation());
-                    return publicationRepository.save(publication);
-                })
-                .orElse(null);
+        Optional<Publication> optionalPublication = publicationRepository.findById(id);
+        if (optionalPublication.isPresent()) {
+            Publication existingPublication = optionalPublication.get();
+            existingPublication.setTitre(newPublication.getTitre()); // Update other fields as needed
+            existingPublication.setContenu(newPublication.getContenu());
+            existingPublication.setDateCreation(newPublication.getDateCreation());
+            // Do not update commentaires here
+            return publicationRepository.save(existingPublication);
+        } else {
+            // Handle case where publication with given id is not found
+            return null;
+        }
     }
 
     @DeleteMapping("/{id}")

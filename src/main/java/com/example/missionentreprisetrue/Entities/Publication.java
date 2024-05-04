@@ -1,14 +1,12 @@
 package com.example.missionentreprisetrue.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.missionentreprisetrue.Entities.Commentaire;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,4 +23,7 @@ public class Publication {
     private String titre;
     private String contenu;
     private Date dateCreation;
+
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL)
+    private List<Commentaire> commentaires;
 }
