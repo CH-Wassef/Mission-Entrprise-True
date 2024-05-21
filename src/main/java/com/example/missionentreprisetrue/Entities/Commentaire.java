@@ -16,7 +16,7 @@ import java.util.Date;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Commentaire {
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,6 +26,10 @@ public class Commentaire {
     @ManyToOne
     @JsonIgnore // Ignore during serialization
     private Publication publication;
+
+    @ManyToOne
+    @JsonIgnore // Ignore during serialization
+    private Utilisateur utilisateur;
 
     @JsonProperty("publication_id") // Use a different name during deserialization
     public void setPublicationId(Long publicationId) {
